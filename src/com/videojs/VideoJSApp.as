@@ -1,17 +1,19 @@
 package com.videojs{
     
     import flash.display.Sprite;
-	
+    import flash.display.Stage;
+
     public class VideoJSApp extends Sprite{
         
-        private var _uiView:VideoJSView;
+        public var _uiView:VideoJSView;
         private var _model:VideoJSModel;
         
-        public function VideoJSApp(){
-            
-            _model = VideoJSModel.getInstance()
+        public function VideoJSApp(stage:Stage, useStageVideo:Boolean){
 
-            _uiView = new VideoJSView();
+            _model = VideoJSModel.getInstance();
+            _model.useStageVideo = useStageVideo;
+
+            _uiView = new VideoJSView(stage, useStageVideo);
             addChild(_uiView);
 
         }

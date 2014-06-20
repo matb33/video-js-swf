@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Video.js | HTML5 Video Player</title>
+
+        <link href="../node_modules/video.js/video-js.dev.css" rel="stylesheet" type="text/css">
+        <script src="../node_modules/video.js/video.dev.js"></script>
+    </head>
+    <body>
+        <video id="hls-player" x-webkit-airplay="allow" class="video-js vjs-default-skin" width="720" height="480">
+            <source type="video/mp4" src="http://192.168.100.13:80/stream/pl.m3u8?PMDKcgmGBfjL-6DVDVjt-A" id="hls-player-source" />
+        </video>
+
+        <script>
+
+            videojs.options.flash.swf = "../dist/video-js.swf";
+
+            videojs("hls-player", {
+                techOrder: ["flash"],
+                autoplay: false,
+                controls: true,
+                preload: "auto",
+                flash: {
+                    params: {
+                        wmode: "direct"
+                    }
+                }
+            }, function () {
+                console.log("VideoJS: ready");
+            });
+
+        </script>
+    </body>
+</html>

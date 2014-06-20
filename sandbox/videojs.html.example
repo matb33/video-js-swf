@@ -10,9 +10,25 @@
 
     <!-- Unless using the CDN hosted version, update the URL to the Flash SWF -->
     <script>
-        videojs.options.flash.swf = "dist/video-js.swf";
-    </script>
+        function initializeVideojs(options) {
+            options = options || {};
+            videojs.options.flash.swf = "dist/video-js.swf";
 
+            videojs("hls-player", {
+                techOrder: ["flash"],
+                autoplay: true,
+                controls: true,
+                preload: "auto",
+                flash: {
+                    params: {
+                        wmode: "direct"
+                    }
+                }
+            }, function () {
+                console.log("VideoJS: ready");
+            });
+        }
+    </script>
 </head>
 <body>
 

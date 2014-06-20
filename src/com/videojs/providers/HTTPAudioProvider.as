@@ -12,6 +12,7 @@ package com.videojs.providers{
     import flash.media.Sound;
     import flash.media.SoundChannel;
     import flash.media.Video;
+    import flash.media.StageVideo;
     import flash.net.URLRequest;
     import flash.utils.ByteArray;
     import flash.utils.Timer;
@@ -336,6 +337,7 @@ package com.videojs.providers{
         }
         
         public function attachVideo(pVideo:Video):void{}
+        public function attachStageVideo(pStageVideo:StageVideo):void{}
 
         public function die():void
         {

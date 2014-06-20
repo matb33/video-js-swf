@@ -1,6 +1,7 @@
 package com.videojs.providers{
 
   import flash.media.Video;
+  import flash.media.StageVideo;
   import flash.utils.ByteArray;
   import flash.net.NetStream;
   import flash.events.Event;
@@ -26,6 +27,7 @@ package com.videojs.providers{
         private var _src:Object;
         private var _model:VideoJSModel;
         private var _videoReference:Video;
+        private var _stageVideoReference:StageVideo;
         private var _metadata:Object;
         private var _mediaWidth:Number;
         private var _mediaHeight:Number;
@@ -157,8 +159,17 @@ package com.videojs.providers{
 
         private function _onFrame(event:Event):void
         {
-          var newWidth:Number = _videoReference.videoWidth;
-          var newHeight:Number =  _videoReference.videoHeight;
+          var newWidth:Number;
+          var newHeight:Number;
+
+          if (_model.useStageVideo) {
+            newWidth = _stageVideoReference.videoWidth;
+            newHeight = _stageVideoReference.videoHeight;
+          } else {
+            newWidth = _videoReference.videoWidth;
+            newHeight = _videoReference.videoHeight;
+          }
+
           if  (newWidth != 0 && 
                newHeight != 0 && 
                newWidth != _mediaWidth && 
@@ -438,6 +449,14 @@ package com.videojs.providers{
           return;
         }
 
+        public function attachStageVideo(pStageVideo:StageVideo):void {
+          _stageVideoReference = pStageVideo;
+          _stageVideoReference.attachNetStream(_hls.stream);
+          _stageVideoReference.addEventListener(Event.ENTER_FRAME, _onFrame);
+          _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_STREAM_READY, {ns:_hls.stream as NetStream}));
+          return;
+        }
+
         /**
          * Called when the provider is about to be disposed of.
          */
@@ -447,6 +466,10 @@ package com.videojs.providers{
 
           if(_videoReference) {
             _videoReference.clear();
+          }
+          if(_stageVideoReference) {
+            _hls.stream.close();
+            _stageVideoReference.attachNetStream(null);
           }
         }
     }

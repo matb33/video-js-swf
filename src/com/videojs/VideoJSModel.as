@@ -19,6 +19,7 @@ package com.videojs{
     import flash.media.SoundMixer;
     import flash.media.SoundTransform;
     import flash.media.Video;
+    import flash.media.StageVideo;
     import flash.utils.ByteArray;
     
     public class VideoJSModel extends EventDispatcher{
@@ -26,6 +27,7 @@ package com.videojs{
         private var _masterVolume:SoundTransform;
         private var _currentPlaybackType:String;
         private var _videoReference:Video;
+        private var _stageVideoReference:StageVideo;
         private var _lastSetVolume:Number = 1;
         private var _provider:IProvider;
         
@@ -46,6 +48,8 @@ package com.videojs{
         private var _poster:String = "";
         
         private static var _instance:VideoJSModel;
+
+        public var useStageVideo:Boolean = false;
         
         public function VideoJSModel(pLock:SingletonLock){
             if (!pLock is SingletonLock) {
@@ -139,6 +143,13 @@ package com.videojs{
             _videoReference = pVideo;
         }
         
+        public function get stageVideoReference():StageVideo{
+            return _stageVideoReference;
+        }
+        public function set stageVideoReference(pStageVideo:StageVideo):void{
+            _stageVideoReference = pStageVideo;
+        }
+
         public function get metadata():Object{
             if(_provider){
                 return _provider.metadata;
@@ -376,10 +387,11 @@ package com.videojs{
          * 
          */        
         public function get videoWidth():int{
-            if(_videoReference != null){
+            if (useStageVideo && _stageVideoReference != null) {
+                return _stageVideoReference.videoWidth;
+            } else if (_videoReference != null) {
                 return _videoReference.videoWidth;
-            }
-            else{
+            } else {
                 return 0;
             }
         }
@@ -390,10 +402,11 @@ package com.videojs{
          * 
          */        
         public function get videoHeight():int{
-            if(_videoReference != null){
+            if (useStageVideo && _stageVideoReference != null) {
+                return _stageVideoReference.videoHeight;
+            } else if (_videoReference != null) {
                 return _videoReference.videoHeight;
-            }
-            else{
+            } else {
                 return 0;
             }
         }
@@ -568,7 +581,11 @@ package com.videojs{
                             path: _src
                         };
                         _provider = new HTTPVideoProvider();
-                        _provider.attachVideo(_videoReference);
+                        if (useStageVideo) {
+                            _provider.attachStageVideo(_stageVideoReference);
+                        } else {
+                            _provider.attachVideo(_videoReference);
+                        }
                         _provider.init(__src, _autoplay);
                     }
                     else if(_currentPlaybackType == PlaybackType.RTMP){
@@ -577,7 +594,11 @@ package com.videojs{
                             streamURL: _rtmpStream
                         };
                         _provider = new RTMPVideoProvider();
-                        _provider.attachVideo(_videoReference);
+                        if (useStageVideo) {
+                            _provider.attachStageVideo(_stageVideoReference);
+                        } else {
+                            _provider.attachVideo(_videoReference);
+                        }
                         _provider.init(__src, _autoplay);
                     }
                     else if(_currentPlaybackType == PlaybackType.HLS){
@@ -585,7 +606,11 @@ package com.videojs{
                             m3u8: _src
                         };
                         _provider = new HLSProvider();
-                        _provider.attachVideo(_videoReference);
+                        if (useStageVideo) {
+                            _provider.attachStageVideo(_stageVideoReference);
+                        } else {
+                            _provider.attachVideo(_videoReference);
+                        }
                         _provider.init(__src, _autoplay);
                     }
 

@@ -13,20 +13,27 @@ package com.videojs{
     import flash.external.ExternalInterface;
     import flash.geom.Rectangle;
     import flash.media.Video;
+    import flash.media.StageVideo;
     import flash.net.URLRequest;
     import flash.system.LoaderContext;
+
+    import flash.events.StageVideoEvent;
+    import flash.display.Stage;
+    import org.mangui.HLS.utils.Log;
     
-    public class VideoJSView extends Sprite{
+    public class VideoJSView extends Sprite {
         
         private var _uiVideo:Video;
+        private var _uiStageVideo:StageVideo;
         private var _uiPosterContainer:Sprite;
-            private var _uiPosterImage:Loader;
+        private var _uiPosterImage:Loader;
         private var _uiBackground:Sprite;
         
         private var _model:VideoJSModel;
-        
-        public function VideoJSView(){
-            
+
+       
+        public function VideoJSView(stage:Stage, useStageVideo:Boolean){
+
             _model = VideoJSModel.getInstance();
             _model.addEventListener(VideoJSEvent.POSTER_SET, onPosterSet);
             _model.addEventListener(VideoJSEvent.BACKGROUND_COLOR_SET, onBackgroundColorSet);
@@ -44,20 +51,31 @@ package com.videojs{
             
             _uiPosterContainer = new Sprite();
             
-                _uiPosterImage = new Loader();
-                _uiPosterImage.visible = false;
-                _uiPosterContainer.addChild(_uiPosterImage);
+            _uiPosterImage = new Loader();
+            _uiPosterImage.visible = false;
+            _uiPosterContainer.addChild(_uiPosterImage);
             
             addChild(_uiPosterContainer);
             
-            _uiVideo = new Video();
-            _uiVideo.width = _model.stageRect.width;
-            _uiVideo.height = _model.stageRect.height;
-            _uiVideo.smoothing = true;
-            addChild(_uiVideo);
+            if (useStageVideo) {
+                _uiStageVideo = stage.stageVideos[0];
+                _uiStageVideo.addEventListener(StageVideoEvent.RENDER_STATE, onStageVideoRender);
+
+                _model.stageVideoReference = _uiStageVideo;
+            } else {
+                _uiVideo = new Video();
+                _uiVideo.width = _model.stageRect.width;
+                _uiVideo.height = _model.stageRect.height;
+                _uiVideo.smoothing = true;
+                addChild(_uiVideo);
+                
+                _model.videoReference = _uiVideo;
+            }
             
-            _model.videoReference = _uiVideo;
-            
+        }
+
+        private function onStageVideoRender(e:StageVideoEvent):void {
+            _uiStageVideo.viewPort = _model.stageRect;
         }
         
         /**

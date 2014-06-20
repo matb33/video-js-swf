@@ -11,6 +11,7 @@ package com.videojs.providers{
     import flash.events.TimerEvent;
     import flash.external.ExternalInterface;
     import flash.media.Video;
+    import flash.media.StageVideo;
     import flash.net.NetConnection;
     import flash.net.NetStream;
     import flash.utils.ByteArray;
@@ -33,6 +34,7 @@ package com.videojs.providers{
         private var _pauseOnStart:Boolean = false;
         private var _pausePending:Boolean = false;
         private var _videoReference:Video;
+        private var _stageVideoReference:StageVideo;
         
         private var _src:Object;
         private var _metadata:Object;
@@ -331,11 +333,20 @@ package com.videojs.providers{
         public function attachVideo(pVideo:Video):void{
             _videoReference = pVideo;
         }
+
+        public function attachStageVideo(pStageVideo:StageVideo):void{
+            _stageVideoReference = pStageVideo;
+        }
         
         public function die():void{
             if(_videoReference)
             {
                 _videoReference.attachNetStream(null);
+            }
+
+            if(_stageVideoReference)
+            {
+                _stageVideoReference.attachNetStream(null);
             }
 
             if( _ns )
@@ -412,7 +423,11 @@ package com.videojs.providers{
             _ns.client = this;
             _ns.bufferTime = 1;
             _ns.play(_src.streamURL);
-            _videoReference.attachNetStream(_ns);
+            if (_model.useStageVideo) {
+                _stageVideoReference.attachNetStream(_ns);
+            } else {
+                _videoReference.attachNetStream(_ns);
+            }
             _model.broadcastEventExternally(ExternalEventName.ON_LOAD_START);
             _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_STREAM_READY, {ns:_ns}));
         }

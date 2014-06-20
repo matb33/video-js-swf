@@ -1,6 +1,7 @@
 package com.videojs.providers{
     
     import flash.media.Video;
+    import flash.media.StageVideo;
     import flash.utils.ByteArray;
     
     public interface IProvider{
@@ -161,6 +162,7 @@ package com.videojs.providers{
          * with an external Video instance without exposing it.
          */
         function attachVideo(pVideo:Video):void;
+        function attachStageVideo(pStageVideo:StageVideo):void;
         
         /**
          * Called when the provider is about to be disposed of.

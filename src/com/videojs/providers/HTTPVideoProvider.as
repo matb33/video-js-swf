@@ -10,6 +10,7 @@ package com.videojs.providers{
     import flash.events.NetStatusEvent;
     import flash.events.TimerEvent;
     import flash.media.Video;
+    import flash.media.StageVideo;
     import flash.net.NetConnection;
     import flash.net.NetStream;
     import flash.utils.ByteArray;
@@ -29,6 +30,7 @@ package com.videojs.providers{
         private var _pauseOnStart:Boolean = false;
         private var _pausePending:Boolean = false;
         private var _videoReference:Video;
+        private var _stageVideoReference:StageVideo;
         
         /**
          * When the player is paused, and a seek is executed, the NetStream.time property will NOT update until the decoder encounters a new time tag,
@@ -326,7 +328,16 @@ package com.videojs.providers{
             _videoReference = pVideo;
         }
 
+        public function attachStageVideo(pStageVideo:StageVideo):void{
+            _stageVideoReference = pStageVideo;
+        }
+
         public function die():void{
+            if (_stageVideoReference)
+            {
+                _stageVideoReference.attachNetStream(null);
+            }
+
             if(_videoReference)
             {
                 _videoReference.attachNetStream(null);
@@ -392,7 +403,12 @@ package com.videojs.providers{
             _ns.client = this;
             _ns.bufferTime = .5;
             _ns.play(_src.path);
-            _videoReference.attachNetStream(_ns);
+
+            if (_model.useStageVideo) {
+                _stageVideoReference.attachNetStream(_ns);
+            } else {
+                _videoReference.attachNetStream(_ns);
+            }
 
             if (_src.path === null) {
               _pausePending = true;
@@ -523,11 +539,20 @@ package com.videojs.providers{
                     break;
 
                 case "NetStream.Video.DimensionChange":
-                    _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_VIDEO_DIMENSION_UPDATE, {videoWidth: _videoReference.videoWidth, videoHeight: _videoReference.videoHeight}));
-                    if(_model.metadata && _videoReference)
-                    {
-                        _model.metadata.width = _videoReference.videoWidth;
-                        _model.metadata.height = _videoReference.videoHeight;
+                    if (_model.useStageVideo) {
+                        _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_VIDEO_DIMENSION_UPDATE, {videoWidth: _stageVideoReference.videoWidth, videoHeight: _stageVideoReference.videoHeight}));
+                        if(_model.metadata && _stageVideoReference)
+                        {
+                            _model.metadata.width = _stageVideoReference.videoWidth;
+                            _model.metadata.height = _stageVideoReference.videoHeight;
+                        }
+                    } else {
+                        _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_VIDEO_DIMENSION_UPDATE, {videoWidth: _videoReference.videoWidth, videoHeight: _videoReference.videoHeight}));
+                        if(_model.metadata && _videoReference)
+                        {
+                            _model.metadata.width = _videoReference.videoWidth;
+                            _model.metadata.height = _videoReference.videoHeight;
+                        }
                     }
                     break;
             }

@@ -21,14 +21,20 @@ package{
     import flash.utils.Timer;
     import flash.utils.setTimeout;
     
+    import flash.events.StageVideoAvailabilityEvent;
+    import flash.media.StageVideoAvailability;
+
+    import org.mangui.HLS.utils.Log;
+
     [SWF(backgroundColor="#000000", frameRate="60", width="480", height="270")]
-    public class VideoJS extends Sprite{
+    public class VideoJS extends Sprite {
 
         public const VERSION:String = CONFIG::version;
         
         private var _app:VideoJSApp;
         private var _stageSizeTimer:Timer;
-        
+        private var _useStageVideo:Boolean = false;
+
         public function VideoJS(){
             _stageSizeTimer = new Timer(250);
             _stageSizeTimer.addEventListener(TimerEvent.TIMER, onStageSizeTimerTick);
@@ -48,8 +54,8 @@ package{
             if(ExternalInterface.available){
                 registerExternalMethods();
             }
-            
-            _app = new VideoJSApp();
+
+            _app = new VideoJSApp(stage, _useStageVideo);
             addChild(_app);
 
             _app.model.stageRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
@@ -61,7 +67,6 @@ package{
             _ctxMenu.hideBuiltInItems();
             _ctxMenu.customItems.push(_ctxVersion, _ctxAbout);
             this.contextMenu = _ctxMenu;
-
         }
         
         private function registerExternalMethods():void{
@@ -157,6 +162,16 @@ package{
             stage.addEventListener(Event.RESIZE, onStageResize);
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.align = StageAlign.TOP_LEFT;
+
+            stage.addEventListener(StageVideoAvailabilityEvent.STAGE_VIDEO_AVAILABILITY, onStageVideoAvailability);
+        }
+
+        private function onStageVideoAvailability(e:StageVideoAvailabilityEvent):void {
+            if (e.availability == StageVideoAvailability.AVAILABLE) {
+                Log.info("StageVideo available, use hardware acceleration");
+                _useStageVideo = true;
+            }
+
             _stageSizeTimer.start();
         }
         
