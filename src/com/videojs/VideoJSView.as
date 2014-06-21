@@ -31,8 +31,11 @@ package com.videojs{
         
         private var _model:VideoJSModel;
 
+        private var _useStageVideo:Boolean = false;
       
         public function VideoJSView(stage:Stage, useStageVideo:Boolean){
+
+            _useStageVideo = useStageVideo;
 
             _model = VideoJSModel.getInstance();
             _model.addEventListener(VideoJSEvent.POSTER_SET, onPosterSet);
@@ -57,11 +60,10 @@ package com.videojs{
             
             addChild(_uiPosterContainer);
             
-            if (useStageVideo) {
+            if (_useStageVideo) {
                 _uiStageVideo = stage.stageVideos[0];
                 _uiStageVideo.addEventListener(StageVideoEvent.RENDER_STATE, onStageVideoRender);
 
-                //_model.stageVideoRect = _model.stageRect;
                 _model.stageVideoReference = _uiStageVideo;
             } else {
                 _uiVideo = new Video();
@@ -76,8 +78,7 @@ package com.videojs{
         }
 
         private function onStageVideoRender(e:StageVideoEvent):void {
-            //_uiStageVideo.viewPort = _model.stageVideoRect;
-            _uiStageVideo.viewPort = _model.stageRect;
+            sizeVideoObject();
         }
         
         /**
@@ -111,8 +112,8 @@ package com.videojs{
         }
 
         private function sizeVideoObject():void{
-            
-            var __targetWidth:int, __targetHeight:int;
+
+            var __targetWidth:int, __targetHeight:int, __targetX:int, __targetY:int;
             
             var __availableWidth:int = _model.stageRect.width;
             var __availableHeight:int = _model.stageRect.height;
@@ -123,18 +124,30 @@ package com.videojs{
                 __nativeWidth = Number(_model.metadata.width);
             }
             
-            if(_uiVideo.videoWidth != 0){
-                __nativeWidth = _uiVideo.videoWidth;
+            if(_useStageVideo) {
+                if(_uiStageVideo.videoWidth != 0){
+                    __nativeWidth = _uiStageVideo.videoWidth;
+                }
+            } else {
+                if(_uiVideo.videoWidth != 0){
+                    __nativeWidth = _uiVideo.videoWidth;
+                }
             }
             
             var __nativeHeight:int = 100;
             
-            if(_model.metadata.width != undefined){
+            if(_model.metadata.height != undefined){
                 __nativeHeight = Number(_model.metadata.height);
             }
             
-            if(_uiVideo.videoWidth != 0){
-                __nativeHeight = _uiVideo.videoHeight;
+            if(_useStageVideo) {
+                if(_uiStageVideo.videoHeight != 0){
+                    __nativeHeight = _uiStageVideo.videoHeight;
+                }
+            } else {
+                if(_uiVideo.videoHeight != 0){
+                    __nativeHeight = _uiVideo.videoHeight;
+                }
             }
 
             // first, size the whole thing down based on the available width
@@ -146,12 +159,17 @@ package com.videojs{
                 __targetHeight = __availableHeight;
             }
 
-            _uiVideo.width = __targetWidth;
-            _uiVideo.height = __targetHeight;
-            
-            _uiVideo.x = Math.round((_model.stageRect.width - _uiVideo.width) / 2);
-            _uiVideo.y = Math.round((_model.stageRect.height - _uiVideo.height) / 2);
-            
+            __targetX = Math.round((_model.stageRect.width - __targetWidth) / 2);
+            __targetY = Math.round((_model.stageRect.height - __targetHeight) / 2);
+
+            if (_useStageVideo) {
+                _uiStageVideo.viewPort = new Rectangle(__targetX, __targetY, __targetWidth, __targetHeight);
+            } else {
+                _uiVideo.width = __targetWidth;
+                _uiVideo.height = __targetHeight;
+                _uiVideo.x = __targetX;
+                _uiVideo.y = __targetY;
+            }
 
         }
 

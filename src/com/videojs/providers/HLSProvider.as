@@ -18,6 +18,7 @@ package com.videojs.providers{
   import org.mangui.HLS.HLSSettings;
   import org.mangui.HLS.HLSPlayStates;
   import org.mangui.HLS.utils.Log;
+  import org.mangui.HLS.utils.ScaleVideo;
 
   public class HLSProvider implements IProvider {
 
@@ -90,10 +91,6 @@ package com.videojs.providers{
           _duration = event.levels[0].duration;
           _metadata.width = event.levels[0].width;
           _metadata.height = event.levels[0].height;
-          // if (!isNaN(_metadata.width) && !isNaN(_metadata.height)) {
-          //   _model.stageVideoRect.width = _metadata.width;
-          //   _model.stageVideoRect.height = _metadata.height;
-          // }
           if(_isAutoPlay || _looping) {
             _looping = false;
             play();
@@ -471,10 +468,10 @@ package com.videojs.providers{
           if(_videoReference) {
             _videoReference.clear();
           }
-          if(_stageVideoReference) {
-            _hls.stream.close();
-            _stageVideoReference.attachNetStream(null);
-          }
+          //if(_stageVideoReference) {
+          //  _hls.stream.close();
+          //  _stageVideoReference.attachNetStream(null);
+          //}
         }
     }
 }

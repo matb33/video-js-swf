@@ -50,7 +50,6 @@ package com.videojs{
         private static var _instance:VideoJSModel;
 
         public var useStageVideo:Boolean = false;
-        //public var stageVideoRect:Rectangle;
         
         public function VideoJSModel(pLock:SingletonLock){
             if (!pLock is SingletonLock) {
