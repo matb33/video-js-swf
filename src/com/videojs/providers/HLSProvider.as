@@ -90,6 +90,10 @@ package com.videojs.providers{
           _duration = event.levels[0].duration;
           _metadata.width = event.levels[0].width;
           _metadata.height = event.levels[0].height;
+          // if (!isNaN(_metadata.width) && !isNaN(_metadata.height)) {
+          //   _model.stageVideoRect.width = _metadata.width;
+          //   _model.stageVideoRect.height = _metadata.height;
+          // }
           if(_isAutoPlay || _looping) {
             _looping = false;
             play();

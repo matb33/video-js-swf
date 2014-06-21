@@ -186,6 +186,7 @@ package{
         private function onStageResize(e:Event):void{
             if(_app != null){
                 _app.model.stageRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
+                // _app.model.stageVideoRect = _app.model.stageRect;
                 _app.model.broadcastEvent(new VideoJSEvent(VideoJSEvent.STAGE_RESIZE, {}));
             }
         }

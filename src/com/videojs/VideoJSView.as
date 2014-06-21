@@ -31,7 +31,7 @@ package com.videojs{
         
         private var _model:VideoJSModel;
 
-       
+      
         public function VideoJSView(stage:Stage, useStageVideo:Boolean){
 
             _model = VideoJSModel.getInstance();
@@ -61,6 +61,7 @@ package com.videojs{
                 _uiStageVideo = stage.stageVideos[0];
                 _uiStageVideo.addEventListener(StageVideoEvent.RENDER_STATE, onStageVideoRender);
 
+                //_model.stageVideoRect = _model.stageRect;
                 _model.stageVideoReference = _uiStageVideo;
             } else {
                 _uiVideo = new Video();
@@ -75,6 +76,7 @@ package com.videojs{
         }
 
         private function onStageVideoRender(e:StageVideoEvent):void {
+            //_uiStageVideo.viewPort = _model.stageVideoRect;
             _uiStageVideo.viewPort = _model.stageRect;
         }
         
