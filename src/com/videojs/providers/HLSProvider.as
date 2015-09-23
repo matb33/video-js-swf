@@ -13,14 +13,12 @@ package com.videojs.providers{
   import com.videojs.structs.ReadyState;
   import com.videojs.structs.NetworkState;
 
-  import org.mangui.hls.HLS;
-  import org.mangui.hls.event.HLSEvent;
-  import org.mangui.hls.constant.HLSTypes;
-  import org.mangui.hls.HLSSettings;
-  import org.mangui.hls.constant.HLSPlayStates;
-  import org.mangui.hls.constant.HLSSeekStates;
-  import org.mangui.hls.utils.Log;
-  import org.mangui.hls.utils.Params2Settings;
+  import org.mangui.HLS.HLS;
+  import org.mangui.HLS.HLSEvent;
+  import org.mangui.HLS.HLSSettings;
+  import org.mangui.HLS.HLSPlayStates;
+  import org.mangui.HLS.utils.Log;
+  import org.mangui.HLS.utils.ScaleVideo;
 
   public class HLSProvider implements IProvider {
 
@@ -94,10 +92,6 @@ package com.videojs.providers{
           _duration = event.levels[0].duration;
           _metadata.width = event.levels[0].width;
           _metadata.height = event.levels[0].height;
-          // if (!isNaN(_metadata.width) && !isNaN(_metadata.height)) {
-          //   _model.stageVideoRect.width = _metadata.width;
-          //   _model.stageVideoRect.height = _metadata.height;
-          // }
           if(_isAutoPlay || _looping) {
             _looping = false;
             play();
@@ -538,10 +532,6 @@ package com.videojs.providers{
           // if(_videoReference) {
           //   _videoReference.clear();
           // }
-          if(_stageVideoReference) {
-            _hls.stream.close();
-            _stageVideoReference.attachNetStream(null);
-          }
         }
 
 
