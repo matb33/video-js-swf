@@ -13,7 +13,7 @@ package com.videojs{
             _model = VideoJSModel.getInstance();
             // _model.useStageVideo = useStageVideo;
 
-            _uiView = new VideoJSView(stage, useStageVideo);
+            _uiView = new VideoJSView(stage);
             addChild(_uiView);
 
         }

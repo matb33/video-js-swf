@@ -31,11 +31,11 @@ package com.videojs{
         
         private var _model:VideoJSModel;
 
-        private var _useStageVideo:Boolean = false;
+        // private var _useStageVideo:Boolean = false;
       
         public function VideoJSView(stage:Stage){
 
-            _useStageVideo = useStageVideo;
+            // _useStageVideo = useStageVideo;
 
             _model = VideoJSModel.getInstance();
             _model.addEventListener(VideoJSEvent.POSTER_SET, onPosterSet);
@@ -124,15 +124,15 @@ package com.videojs{
                 __nativeWidth = Number(_model.metadata.width);
             }
             
-            if(_useStageVideo) {
+            // if(_useStageVideo) {
                 if(_uiStageVideo.videoWidth != 0){
                     __nativeWidth = _uiStageVideo.videoWidth;
                 }
-            } else {
-                if(_uiVideo.videoWidth != 0){
-                    __nativeWidth = _uiVideo.videoWidth;
-                }
-            }
+            // } else {
+            //     if(_uiVideo.videoWidth != 0){
+            //         __nativeWidth = _uiVideo.videoWidth;
+            //     }
+            // }
             
             var __nativeHeight:int = 100;
             
@@ -140,15 +140,15 @@ package com.videojs{
                 __nativeHeight = Number(_model.metadata.height);
             }
             
-            if(_useStageVideo) {
+            // if(_useStageVideo) {
                 if(_uiStageVideo.videoHeight != 0){
                     __nativeHeight = _uiStageVideo.videoHeight;
                 }
-            } else {
-                if(_uiVideo.videoHeight != 0){
-                    __nativeHeight = _uiVideo.videoHeight;
-                }
-            }
+            // } else {
+            //     if(_uiVideo.videoHeight != 0){
+            //         __nativeHeight = _uiVideo.videoHeight;
+            //     }
+            // }
 
             // first, size the whole thing down based on the available width
             __targetWidth = __availableWidth;
@@ -162,14 +162,14 @@ package com.videojs{
             __targetX = Math.round((_model.stageRect.width - __targetWidth) / 2);
             __targetY = Math.round((_model.stageRect.height - __targetHeight) / 2);
 
-            if (_useStageVideo) {
+            // if (_useStageVideo) {
                 _uiStageVideo.viewPort = new Rectangle(__targetX, __targetY, __targetWidth, __targetHeight);
-            } else {
-                _uiVideo.width = __targetWidth;
-                _uiVideo.height = __targetHeight;
-                _uiVideo.x = __targetX;
-                _uiVideo.y = __targetY;
-            }
+            // } else {
+            //     _uiVideo.width = __targetWidth;
+            //     _uiVideo.height = __targetHeight;
+            //     _uiVideo.x = __targetX;
+            //     _uiVideo.y = __targetY;
+            // }
 
         }
 
