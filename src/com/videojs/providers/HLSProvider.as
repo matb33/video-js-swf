@@ -13,12 +13,14 @@ package com.videojs.providers{
   import com.videojs.structs.ReadyState;
   import com.videojs.structs.NetworkState;
 
-  import org.mangui.HLS.HLS;
-  import org.mangui.HLS.HLSEvent;
-  import org.mangui.HLS.HLSSettings;
-  import org.mangui.HLS.HLSPlayStates;
-  import org.mangui.HLS.utils.Log;
-  import org.mangui.HLS.utils.ScaleVideo;
+  import org.mangui.hls.HLS;
+  import org.mangui.hls.event.HLSEvent;
+  import org.mangui.hls.constant.HLSTypes;
+  import org.mangui.hls.HLSSettings;
+  import org.mangui.hls.constant.HLSPlayStates;
+  import org.mangui.hls.constant.HLSSeekStates;
+  import org.mangui.hls.utils.Log;
+  import org.mangui.hls.utils.Params2Settings;
 
   public class HLSProvider implements IProvider {
 

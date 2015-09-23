@@ -24,7 +24,7 @@ package{
     import flash.events.StageVideoAvailabilityEvent;
     import flash.media.StageVideoAvailability;
 
-    import org.mangui.HLS.utils.Log;
+    import org.mangui.hls.utils.Log;
 
     [SWF(backgroundColor="#000000", frameRate="60", width="480", height="270")]
     public class VideoJS extends Sprite {

@@ -348,7 +348,7 @@ package com.videojs.providers{
             }
         }
 
-        public function attachVideo(pVideo:Video):void{}
+        // public function attachVideo(pVideo:Video):void{}
         public function attachStageVideo(pStageVideo:StageVideo):void{}
 
         public function die():void

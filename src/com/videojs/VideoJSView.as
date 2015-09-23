@@ -19,8 +19,9 @@ package com.videojs{
 
     import flash.events.StageVideoEvent;
     import flash.display.Stage;
-    import org.mangui.HLS.utils.Log;
-    
+
+    import org.mangui.hls.utils.Log;
+
     public class VideoJSView extends Sprite {
         
         private var _uiVideo:Video;

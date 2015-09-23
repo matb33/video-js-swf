@@ -343,7 +343,7 @@ package com.videojs.providers{
         }
         
         // public function attachVideo(pVideo:Video):void{
-        //     _videoReference = pVideo;
+            // _videoReference = pVideo;
         // }
 
         public function attachStageVideo(pStageVideo:StageVideo):void{

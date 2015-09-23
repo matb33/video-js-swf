@@ -12,7 +12,7 @@
   "author": "Brightcove",
   "repository": {
     "type": "git",
-    "url": "https://github.com/videojs/video-js-swf.git"
+    "url": "https://github.com/matb33/video-js-swf.git"
   },
   "devDependencies": {
     "async": "~0.2.9",
