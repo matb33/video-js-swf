@@ -1,9 +1,9 @@
 package com.videojs.providers{
-    
+
     import com.videojs.VideoJSModel;
     import com.videojs.structs.ExternalErrorEventName;
     import com.videojs.structs.ExternalEventName;
-    
+
     import flash.events.Event;
     import flash.events.IOErrorEvent;
     import flash.events.ProgressEvent;
@@ -17,10 +17,10 @@ package com.videojs.providers{
     import flash.utils.ByteArray;
     import flash.utils.Timer;
     import flash.utils.getTimer;
-    
-    
+
+
     public class HTTPAudioProvider implements IProvider{
-        
+
         private var _throughputTimer:Timer;
         private var _currentThroughput:int = 0; // in B/sec
         private var _loadStartTimestamp:int;
@@ -32,9 +32,9 @@ package com.videojs.providers{
         private var _metadata:Object;
         private var _loop:Boolean = false;
         private var _preloadInitiated:Boolean = false;
-        
+
         private var _sound:Sound;
-		private var _soundChannel:SoundChannel;
+        private var _soundChannel:SoundChannel;
         private var _audioPlaybackStarted:Boolean = false;
         private var _audioPlaybackStopped:Boolean = false;
         private var _audioPlaybackPaused:Boolean = false;
@@ -46,24 +46,24 @@ package com.videojs.providers{
         private var _audioPausePoint:Number = 0;
         private var _estimatedDurations:int = 0;
         private var _canPlayThroughDispatched:Boolean = false;
-        
+
         private var _model:VideoJSModel;
-        
+
         public function HTTPAudioProvider(){
             _model = VideoJSModel.getInstance();
             _metadata = {};
             _throughputTimer = new Timer(250, 0);
             _throughputTimer.addEventListener(TimerEvent.TIMER, onThroughputTimerTick);
         }
-        
+
         public function get loop():Boolean{
             return _loop;
         }
-        
+
         public function set loop(pLoop:Boolean):void{
             _loop = pLoop;
         }
-        
+
         public function get time():Number{
             if(_audioPlaybackStarted){
                 if(_soundChannel != null){
@@ -77,11 +77,11 @@ package com.videojs.providers{
                 return 0;
             }
         }
-        
+
         public function get duration():Number{
             return _audioDuration / 1000;
         }
-        
+
         public function get readyState():int{
             if(_canPlayThroughDispatched){
                 return 4;
@@ -99,7 +99,7 @@ package com.videojs.providers{
                 return 0;
             }
         }
-        
+
         public function get networkState():int{
             if(_loadErrored){
                 return 3;
@@ -115,75 +115,87 @@ package com.videojs.providers{
         public function appendBuffer(bytes:ByteArray):void{
             throw "HTTPAudioProvider does not support appendBuffer";
         }
-        
+
+        public function endOfStream():void{
+            throw "HTTPAudioProvider does not support endOfStream";
+        }
+
+        public function abort():void{
+            throw "HTTPAudioProvider does not support abort";
+        }
+
+        public function discontinuity():void{
+            throw "HTTPAudioProvider does not support discontinuities";
+        }
+
         public function get buffered():Number{
             if(duration > 0){
                 return (bytesLoaded / bytesTotal) * duration;
             }
             return 0;
         }
-        
+
         public function get bufferedBytesEnd():int{
             return _audioBytesLoaded;
         }
-        
+
         public function get bytesLoaded():int{
             return _audioBytesLoaded;
         }
-        
+
         public function get bytesTotal():int{
             return _audioBytesTotal;
         }
-        
+
         public function get playing():Boolean{
             return _audioPlaybackStarted;
         }
-        
+
         public function get paused():Boolean{
             return _audioPlaybackPaused;
         }
-        
+
         public function get ended():Boolean{
             return _audioPlaybackHasEnded;
         }
-        
+
         public function get seeking():Boolean{
             return _audioIsSeeking;
         }
-        
+
         public function get usesNetStream():Boolean{
             return false;
         }
-        
+
         public function get metadata():Object{
             return _metadata;
         }
-        
+
         public function get srcAsString():String{
             if(_src != null && _src.path != undefined){
                 return _src.path;
             }
             return "";
         }
-        
+
         public function set src(pSrc:Object):void{
             _src = pSrc;
         }
-        
+
         public function init(pSrc:Object, pAutoplay:Boolean):void{
             _src = pSrc;
             _loadErrored = false;
             _loadStarted = false;
             _loadCompleted = false;
             if(pAutoplay){
-               play(); 
+               play();
             }
         }
-        
+
         public function load():void{
-            
+
             _preloadInitiated = true;
-            
+
             if(_src != ""){
 
                 // if we're already playing
@@ -203,7 +215,7 @@ package com.videojs.providers{
                         _sound.addEventListener(Event.ID3, onID3Loaded);
                     }
                 }
-                        
+
                 // load the asset
                 _audioPlaybackStarted = false;
                 _audioPlaybackStopped = false;
@@ -227,11 +239,11 @@ package com.videojs.providers{
                 _model.broadcastEventExternally(ExternalEventName.ON_BUFFER_EMPTY);
             }
         }
-        
+
         public function play():void{
-            
+
             if(_src != ""){
-                
+
                 if(_preloadInitiated){
                     _preloadInitiated = false;
                     _soundChannel = _sound.play();
@@ -248,7 +260,7 @@ package com.videojs.providers{
                             _soundChannel.stop();
                             _soundChannel = null;
                             _throughputTimer.stop();
-                            _throughputTimer.reset();   
+                            _throughputTimer.reset();
                         }
                     }
                     else{
@@ -259,7 +271,7 @@ package com.videojs.providers{
                         _sound.addEventListener(Event.OPEN, onSoundOpen);
                         _sound.addEventListener(Event.ID3, onID3Loaded);
                     }
-                        
+
                     // play the asset
                     _audioPlaybackStarted = false;
                     _audioPlaybackStopped = false;
@@ -282,11 +294,11 @@ package com.videojs.providers{
                     _soundChannel = _sound.play();
                     _soundChannel.addEventListener(Event.SOUND_COMPLETE, onSoundPlayComplete);
                     _model.broadcastEventExternally(ExternalEventName.ON_LOAD_START);
-                    _model.broadcastEventExternally(ExternalEventName.ON_BUFFER_EMPTY);    
+                    _model.broadcastEventExternally(ExternalEventName.ON_BUFFER_EMPTY);
                 }
             }
         }
-        
+
         public function pause():void{
             if(_audioPlaybackStarted){
                 _audioPausePoint = _soundChannel.position;
@@ -295,7 +307,7 @@ package com.videojs.providers{
                 _model.broadcastEventExternally(ExternalEventName.ON_PAUSE);
             }
         }
-        
+
         public function resume():void{
             if(_audioPlaybackStarted && _audioPlaybackPaused){
                 _soundChannel = _sound.play(_audioPausePoint);
@@ -304,7 +316,7 @@ package com.videojs.providers{
                 _model.broadcastEventExternally(ExternalEventName.ON_START);
             }
         }
-        
+
         public function seekBySeconds(pTime:Number):void{
             if(_audioDuration > 0){
                 _soundChannel.stop();
@@ -315,7 +327,7 @@ package com.videojs.providers{
                 _model.broadcastEventExternally(ExternalEventName.ON_SEEK_COMPLETE);
             }
         }
-        
+
         public function seekByPercent(pPercent:Number):void{
             if(_audioPlaybackStarted && _audioDuration > 0){
                 _soundChannel.stop();
@@ -326,7 +338,7 @@ package com.videojs.providers{
                 _model.broadcastEventExternally(ExternalEventName.ON_SEEK_COMPLETE);
             }
         }
-        
+
         public function stop():void{
             if(_audioPlaybackStarted){
                 _soundChannel.stop();
@@ -335,7 +347,7 @@ package com.videojs.providers{
                 _audioPlaybackPaused = false;
             }
         }
-        
+
         public function attachVideo(pVideo:Video):void{}
         public function attachStageVideo(pStageVideo:StageVideo):void{}
 
@@ -362,6 +374,25 @@ package com.videojs.providers{
             }
         }
         
+        // This provider supports a stream with single level.
+        public function get numberOfLevels():int{
+            return 1;
+        }
+        public function get level():int{
+            return 0;
+        }
+        public function set level(pLevel:int):void
+        {
+            if (pLevel != 0)
+            {
+                throw "Wrong level.";
+            }
+        }
+        public function get autoLevelEnabled():Boolean
+        {
+            return false;
+        }
+
         private function doLoadCalculations():void{
             // if the load is finished
             if(_sound.bytesLoaded == _sound.bytesTotal){
@@ -389,19 +420,19 @@ package com.videojs.providers{
                         _model.broadcastEventExternally(ExternalEventName.ON_CAN_PLAY_THROUGH);
                     }
                 }
-            }   
+            }
         }
-        
+
         private function onThroughputTimerTick(e:TimerEvent):void{
             doLoadCalculations();
         }
-        
+
         private function onSoundProgress(e:ProgressEvent):void{
             _audioBytesLoaded = e.bytesLoaded;
             _audioBytesTotal = e.bytesTotal;
             _audioDuration = _sound.length
         }
-        
+
         private function onSoundOpen(e:Event):void{
             _loadStartTimestamp = getTimer();
             _throughputTimer.start();
@@ -414,7 +445,7 @@ package com.videojs.providers{
             _throughputTimer.reset();
             doLoadCalculations();
         }
-		
+
         private function onSoundPlayComplete(e:Event):void{
             if(!_loop){
                 _audioPlaybackStarted = false;
@@ -430,12 +461,12 @@ package com.videojs.providers{
                 }
             }
         }
-		
+
         private function onSoundLoadError(e:IOErrorEvent):void{
             _loadErrored = true;
             _model.broadcastErrorEventExternally(ExternalErrorEventName.SRC_404);
         }
-        
+
         private function onID3Loaded(event:Event):void{
             _metadata = {
                 id3:_sound.id3

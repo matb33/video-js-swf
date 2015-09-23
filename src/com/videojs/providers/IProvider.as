@@ -31,6 +31,26 @@ package com.videojs.providers{
          * @param  bytes the ByteArray of data to append.
          */
         function appendBuffer(bytes:ByteArray):void;
+
+        /**
+         * Indicates that no further bytes will appended to the source
+         * buffer. After this method has been called, reaching the end
+         * of buffered input is equivalent to the end of the media.
+         */
+        function endOfStream():void;
+
+        /**
+         * Aborts any data currently in the buffer and resets the decoder.
+         * @see https://dvcs.w3.org/hg/html-media/raw-file/tip/media-source/media-source.html#widl-SourceBuffer-abort-void
+         */
+        function abort():void;
+
+        /**
+         * Indicates the next bytes of content will have timestamp
+         * values that are not contiguous with the current playback
+         * timeline.
+         */
+        function discontinuity():void;
         
         /**
          * Should return an interger that reflects the closest parallel to
@@ -169,5 +189,26 @@ package com.videojs.providers{
          */
         function die():void;
         
+        /**
+         * Should return the number of stream levels that this content has.
+         */
+        function get numberOfLevels():int;
+
+        /**
+         * Should return the currently used stream level.
+         */
+        function get level():int;
+
+        /**
+         * Select the stream level.
+         * If -1 is specified, it means auto selection.
+         * If a level is specified (0-based index), that level is used and auto selection is disabled.
+         */
+        function set level(pLevel:int):void;
+
+        /**
+          * Should return whether auto level selection is currently enabled or not.
+          */
+        function get autoLevelEnabled():Boolean;
     }
 }
