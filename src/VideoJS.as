@@ -33,7 +33,7 @@ package{
 
         private var _app:VideoJSApp;
         private var _stageSizeTimer:Timer;
-        private var _useStageVideo:Boolean = false;
+        // private var _useStageVideo:Boolean = false;
 
         public function VideoJS(){
 
@@ -56,7 +56,7 @@ package{
                 registerExternalMethods();
             }
 
-            _app = new VideoJSApp(stage, _useStageVideo);
+            _app = new VideoJSApp(stage);
 
             addChild(_app);
 
@@ -185,7 +185,7 @@ package{
         private function onStageVideoAvailability(e:StageVideoAvailabilityEvent):void {
             if (e.availability == StageVideoAvailability.AVAILABLE) {
                 Log.info("StageVideo available, use hardware acceleration");
-                _useStageVideo = true;
+                // _useStageVideo = true;
             }
 
             _stageSizeTimer.start();

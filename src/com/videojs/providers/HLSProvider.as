@@ -29,7 +29,7 @@ package com.videojs.providers{
         private var _hls:HLS;
         private var _src:Object;
         private var _model:VideoJSModel;
-        private var _videoReference:Video;
+        // private var _videoReference:Video;
         private var _stageVideoReference:StageVideo;
         private var _metadata:Object;
         private var _mediaWidth:Number;
@@ -198,13 +198,13 @@ package com.videojs.providers{
           var newWidth:Number;
           var newHeight:Number;
 
-          if (_model.useStageVideo) {
+          // if (_model.useStageVideo) {
             newWidth = _stageVideoReference.videoWidth;
             newHeight = _stageVideoReference.videoHeight;
-          } else {
-            newWidth = _videoReference.videoWidth;
-            newHeight = _videoReference.videoHeight;
-          }
+          // } else {
+          //  newWidth = _videoReference.videoWidth;
+          //  newHeight = _videoReference.videoHeight;
+          // }
 
           if  (newWidth != 0 &&
                newHeight != 0 &&
@@ -511,14 +511,14 @@ package com.videojs.providers{
          * For providers that employ an instance of NetStream, this method is used to connect that NetStream
          * with an external Video instance without exposing it.
          */
-        public function attachVideo(pVideo:Video):void {
-          _videoReference = pVideo;
-          _videoReference.attachNetStream(_hls.stream);
-          _hls.stage = pVideo.stage;
-          _videoReference.addEventListener(Event.ENTER_FRAME, _onFrame);
-          _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_STREAM_READY, {ns:_hls.stream as NetStream}));
-          return;
-        }
+        // public function attachVideo(pVideo:Video):void {
+        //   _videoReference = pVideo;
+        //   _videoReference.attachNetStream(_hls.stream);
+        //   _hls.stage = pVideo.stage;
+        //   _videoReference.addEventListener(Event.ENTER_FRAME, _onFrame);
+        //   _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_STREAM_READY, {ns:_hls.stream as NetStream}));
+        //   return;
+        // }
 
         public function attachStageVideo(pStageVideo:StageVideo):void {
           _stageVideoReference = pStageVideo;
@@ -535,9 +535,9 @@ package com.videojs.providers{
           Log.debug("HLSProvider.die");
           stop();
 
-          if(_videoReference) {
-            _videoReference.clear();
-          }
+          // if(_videoReference) {
+          //   _videoReference.clear();
+          // }
           if(_stageVideoReference) {
             _hls.stream.close();
             _stageVideoReference.attachNetStream(null);

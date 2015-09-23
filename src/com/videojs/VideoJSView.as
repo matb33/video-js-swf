@@ -32,7 +32,7 @@ package com.videojs{
         private var _model:VideoJSModel;
 
       
-        public function VideoJSView(stage:Stage, useStageVideo:Boolean){
+        public function VideoJSView(stage:Stage){
 
             _model = VideoJSModel.getInstance();
             _model.addEventListener(VideoJSEvent.POSTER_SET, onPosterSet);
@@ -57,21 +57,21 @@ package com.videojs{
             
             addChild(_uiPosterContainer);
             
-            if (useStageVideo) {
+            // if (useStageVideo) {
                 _uiStageVideo = stage.stageVideos[0];
                 _uiStageVideo.addEventListener(StageVideoEvent.RENDER_STATE, onStageVideoRender);
 
                 //_model.stageVideoRect = _model.stageRect;
                 _model.stageVideoReference = _uiStageVideo;
-            } else {
-                _uiVideo = new Video();
-                _uiVideo.width = _model.stageRect.width;
-                _uiVideo.height = _model.stageRect.height;
-                _uiVideo.smoothing = true;
-                addChild(_uiVideo);
-                
-                _model.videoReference = _uiVideo;
-            }
+            // } else {
+            //     _uiVideo = new Video();
+            //     _uiVideo.width = _model.stageRect.width;
+            //     _uiVideo.height = _model.stageRect.height;
+            //     _uiVideo.smoothing = true;
+            //     addChild(_uiVideo);
+            //
+            //     _model.videoReference = _uiVideo;
+            // }
             
         }
 

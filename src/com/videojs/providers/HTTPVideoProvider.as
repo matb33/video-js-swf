@@ -63,7 +63,7 @@ package com.videojs.providers{
          * through appendBuffer, not for traditional file download video.
          */
         private var _ending:Boolean = false;
-        private var _videoReference:Video;
+        // private var _videoReference:Video;
         private var _stageVideoReference:StageVideo;
 
         /**
@@ -392,9 +392,9 @@ package com.videojs.providers{
             }
         }
 
-        public function attachVideo(pVideo:Video):void{
-            _videoReference = pVideo;
-        }
+        // public function attachVideo(pVideo:Video):void{
+        //     _videoReference = pVideo;
+        // }
 
         public function attachStageVideo(pStageVideo:StageVideo):void{
             _stageVideoReference = pStageVideo;
@@ -406,12 +406,12 @@ package com.videojs.providers{
                 _stageVideoReference.attachNetStream(null);
             }
 
-            if(_videoReference)
-            {
-                // Clears the image currently displayed in the Video object.
-                _videoReference.clear();
-                _videoReference.attachNetStream(null);
-            }
+            // if(_videoReference)
+            // {
+            //     // Clears the image currently displayed in the Video object.
+            //     _videoReference.clear();
+            //     _videoReference.attachNetStream(null);
+            // }
 
             if( _ns )
             {
@@ -496,11 +496,11 @@ package com.videojs.providers{
             _ns.play(_src.path);
             _ns.pause();
 
-            if (_model.useStageVideo) {
+            // if (_model.useStageVideo) {
                 _stageVideoReference.attachNetStream(_ns);
-            } else {
-                _videoReference.attachNetStream(_ns);
-            }
+            // } else {
+            //     _videoReference.attachNetStream(_ns);
+            // }
 
             if (_src.path === null) {
               _pausePending = true;
@@ -652,21 +652,21 @@ package com.videojs.providers{
                     break;
 
                 case "NetStream.Video.DimensionChange":
-                    if (_model.useStageVideo) {
+                    // if (_model.useStageVideo) {
                         _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_VIDEO_DIMENSION_UPDATE, {videoWidth: _stageVideoReference.videoWidth, videoHeight: _stageVideoReference.videoHeight}));
                         if(_model.metadata && _stageVideoReference)
                         {
                             _model.metadata.width = _stageVideoReference.videoWidth;
                             _model.metadata.height = _stageVideoReference.videoHeight;
                         }
-                    } else {
-                        _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_VIDEO_DIMENSION_UPDATE, {videoWidth: _videoReference.videoWidth, videoHeight: _videoReference.videoHeight}));
-                        if(_model.metadata && _videoReference)
-                        {
-                            _model.metadata.width = _videoReference.videoWidth;
-                            _model.metadata.height = _videoReference.videoHeight;
-                        }
-                    }
+                    // } else {
+                    //     _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_VIDEO_DIMENSION_UPDATE, {videoWidth: _videoReference.videoWidth, videoHeight: _videoReference.videoHeight}));
+                    //     if(_model.metadata && _videoReference)
+                    //     {
+                    //         _model.metadata.width = _videoReference.videoWidth;
+                    //         _model.metadata.height = _videoReference.videoHeight;
+                    //     }
+                    // }
                     break;
             }
             _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_NETSTREAM_STATUS, {info:e.info}));

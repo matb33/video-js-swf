@@ -33,7 +33,7 @@ package com.videojs.providers{
         private var _loadErrored:Boolean = false;
         private var _pauseOnStart:Boolean = false;
         private var _pausePending:Boolean = false;
-        private var _videoReference:Video;
+        // private var _videoReference:Video;
         private var _stageVideoReference:StageVideo;
         
         private var _src:Object;
@@ -342,19 +342,19 @@ package com.videojs.providers{
             }
         }
         
-        public function attachVideo(pVideo:Video):void{
-            _videoReference = pVideo;
-        }
+        // public function attachVideo(pVideo:Video):void{
+        //     _videoReference = pVideo;
+        // }
 
         public function attachStageVideo(pStageVideo:StageVideo):void{
             _stageVideoReference = pStageVideo;
         }
         
         public function die():void{
-            if(_videoReference)
-            {
-                _videoReference.attachNetStream(null);
-            }
+            // if(_videoReference)
+            // {
+            //     _videoReference.attachNetStream(null);
+            // }
 
             if(_stageVideoReference)
             {
@@ -454,11 +454,11 @@ package com.videojs.providers{
             _ns.client = this;
             _ns.bufferTime = 1;
             _ns.play(_src.streamURL);
-            if (_model.useStageVideo) {
+            // if (_model.useStageVideo) {
                 _stageVideoReference.attachNetStream(_ns);
-            } else {
-                _videoReference.attachNetStream(_ns);
-            }
+            // } else {
+            //     _videoReference.attachNetStream(_ns);
+            // }
             _model.broadcastEventExternally(ExternalEventName.ON_LOAD_START);
             _model.broadcastEvent(new VideoPlaybackEvent(VideoPlaybackEvent.ON_STREAM_READY, {ns:_ns}));
         }

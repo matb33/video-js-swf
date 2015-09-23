@@ -26,7 +26,7 @@ package com.videojs{
 
         private var _masterVolume:SoundTransform;
         private var _currentPlaybackType:String;
-        private var _videoReference:Video;
+        // private var _videoReference:Video;
         private var _stageVideoReference:StageVideo;
         private var _lastSetVolume:Number = 1;
         private var _provider:IProvider;
@@ -50,8 +50,8 @@ package com.videojs{
 
         private static var _instance:VideoJSModel;
 
-        public var useStageVideo:Boolean = false;
-        //public var stageVideoRect:Rectangle;
+        // public var useStageVideo:Boolean = false;
+        // public var stageVideoRect:Rectangle;
 
         public function VideoJSModel(pLock:SingletonLock){
             if (!pLock is SingletonLock) {
@@ -151,12 +151,12 @@ package com.videojs{
             }
         }
 
-        public function get videoReference():Video{
-            return _videoReference;
-        }
-        public function set videoReference(pVideo:Video):void {
-            _videoReference = pVideo;
-        }
+        // public function get videoReference():Video{
+        //     return _videoReference;
+        // }
+        // public function set videoReference(pVideo:Video):void {
+        //     _videoReference = pVideo;
+        // }
 
         public function get stageVideoReference():StageVideo{
             return _stageVideoReference;
@@ -415,10 +415,10 @@ package com.videojs{
          *
          */
         public function get videoWidth():int{
-            if (useStageVideo && _stageVideoReference != null) {
+            if (_stageVideoReference != null) {
                 return _stageVideoReference.videoWidth;
-            } else if (_videoReference != null) {
-                return _videoReference.videoWidth;
+            // } else if (_videoReference != null) {
+            //     return _videoReference.videoWidth;
             } else {
                 return 0;
             }
@@ -430,10 +430,10 @@ package com.videojs{
          *
          */
         public function get videoHeight():int{
-            if (useStageVideo && _stageVideoReference != null) {
+            if (_stageVideoReference != null) {
                 return _stageVideoReference.videoHeight;
-            } else if (_videoReference != null) {
-                return _videoReference.videoHeight;
+            // } else if (_videoReference != null) {
+            //     return _videoReference.videoHeight;
             } else {
                 return 0;
             }
@@ -683,11 +683,11 @@ package com.videojs{
                             path: _src
                         };
                         _provider = new HTTPVideoProvider();
-                        if (useStageVideo) {
+                        // if (useStageVideo) {
                             _provider.attachStageVideo(_stageVideoReference);
-                        } else {
-                            _provider.attachVideo(_videoReference);
-                        }
+                        // } else {
+                        //     _provider.attachVideo(_videoReference);
+                        // }
                         _provider.init(__src, _autoplay);
                     }
                     else if(_currentPlaybackType == PlaybackType.RTMP){
@@ -696,11 +696,11 @@ package com.videojs{
                             streamURL: _rtmpStream
                         };
                         _provider = new RTMPVideoProvider();
-                        if (useStageVideo) {
+                        // if (useStageVideo) {
                             _provider.attachStageVideo(_stageVideoReference);
-                        } else {
-                            _provider.attachVideo(_videoReference);
-                        }
+                        // } else {
+                        //     _provider.attachVideo(_videoReference);
+                        // }
                         _provider.init(__src, _autoplay);
                     }
                     else if(_currentPlaybackType == PlaybackType.HLS){
@@ -709,11 +709,11 @@ package com.videojs{
                             parameters: _parameters
                         };
                         _provider = new HLSProvider();
-                        if (useStageVideo) {
+                        // if (useStageVideo) {
                             _provider.attachStageVideo(_stageVideoReference);
-                        } else {
-                            _provider.attachVideo(_videoReference);
-                        }
+                        // } else {
+                        //     _provider.attachVideo(_videoReference);
+                        // }
                         _provider.init(__src, _autoplay);
                     }
 

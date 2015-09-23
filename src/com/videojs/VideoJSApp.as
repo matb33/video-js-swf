@@ -8,10 +8,10 @@ package com.videojs{
         public var _uiView:VideoJSView;
         private var _model:VideoJSModel;
         
-        public function VideoJSApp(stage:Stage, useStageVideo:Boolean){
+        public function VideoJSApp(stage:Stage){
 
             _model = VideoJSModel.getInstance();
-            _model.useStageVideo = useStageVideo;
+            // _model.useStageVideo = useStageVideo;
 
             _uiView = new VideoJSView(stage, useStageVideo);
             addChild(_uiView);
